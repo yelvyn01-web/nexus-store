@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEXUS STORE | Digital Goods</title>
+<style>
+:root {
+  --bg: #0b0c10;
+  --panel: #151720;
+  --line: #292c39;
+  --purple: #8b5cf6;
+  --text: #f5f5fa;
+  --muted: #a4a7b8;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, Tahoma, sans-serif;
+}
+button, input, select { font: inherit; }
+header {
+  padding: 20px 6%;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.logo { font-size: 23px; font-weight: 900; }
+.logo span { color: var(--purple); }
+.small { color: var(--muted); font-size: 12px; margin-top: 5px; }
+.wrap { max-width: 1100px; margin: auto; padding: 28px 18px; }
+.hero {
+  background: linear-gradient(130deg,#20163b,#171925 65%,#101116);
+  padding: 35px 25px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  margin-bottom: 25px;
+}
+.hero h1 { margin: 0 0 12px; font-size: clamp(25px,5vw,38px); }
+p { color: var(--muted); line-height: 1.7; }
+.controls { display: flex; gap: 10px; margin: 22px 0; flex-wrap: wrap; }
+input, select {
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 12px;
+  border-radius: 10px;
+}
+input { flex: 1; min-width: 180px; }
+button {
+  background: var(--purple);
+  color: white;
+  border: 0;
+  border-radius: 9px;
+  padding: 11px 14px;
+  cursor: pointer;
+}
+button:hover { filter: brightness(1.13); }
+.secondary { background: #292c39; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap: 16px;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 17px;
+}
+.art {
+  height: 115px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 36px;
+  background: linear-gradient(135deg,#302050,#192b43);
+  margin-bottom: 15px;
+}
+.card h3 { margin: 8px 0; }
+.tag { color: #c4b5fd; font-size: 12px; }
+.price { font-size: 23px; font-weight: bold; margin: 13px 0; }
+.actions { display: flex; gap: 8px; }
+.actions button { flex: 1; }
+.section-title { margin: 28px 0 12px; }
+#cart {
+  margin-top: 25px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 20px;
+  border-radius: 14px;
+}
+.cart-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+footer {
+  text-align: center;
+  padding: 30px 15px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+}
+.notice { color: #fbbf24; font-size: 13px; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <div class="logo">NEXUS <span>STORE</span></div>
+    <div class="small">DIGITAL GOODS • YOUR ONLINE STORE</div>
+  </div>
+  <button onclick="document.querySelector('#cart').scrollIntoView({behavior:'smooth'})">
+    🛒 ตะกร้า (<span id="count">0</span>)
+  </button>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="tag">WELCOME TO NEXUS</div>
+    <h1>ร้านค้าดิจิทัลของคุณ</h1>
+    <p>เลือกโค้ดเกมและสินค้าดิจิทัลที่ต้องการ<br>
+    ปรับชื่อสินค้า ราคา และหมวดหมู่ให้เป็นร้านของคุณได้เลย</p>
+    <button onclick="document.querySelector('#products').scrollIntoView({behavior:'smooth'})">
+      เลือกซื้อสินค้า ↓
+    </button>
+  </section>
+
+  <h2 class="section-title" id="products">สินค้าทั้งหมด</h2>
+  <div class="controls">
+    <input id="search" placeholder="🔎 ค้นหาสินค้า..."
+      oninput="renderProducts()">
+    <select id="category" onchange="renderProducts()">
+      <option value="all">ทุกหมวดหมู่</option>
+      <option value="game">โค้ดเกม</option>
+      <option value="gift">บัตรของขวัญ</option>
+      <option value="other">สินค้าอื่น ๆ</option>
+    </select>
+  </div>
+
+  <div class="grid" id="productGrid"></div>
+
+  <section id="cart">
+    <h2>🛒 ตะกร้าสินค้า</h2>
+    <div id="cartItems"><p>ยังไม่มีสินค้าในตะกร้า</p></div>
+    <h3>รวมทั้งสิ้น: ฿<span id="total">0</span></h3>
+    <button onclick="checkout()">ดำเนินการสั่งซื้อ</button>
+    <p class="notice" id="checkoutMessage">
+      โหมดทดลอง: ยังไม่รับชำระเงินจริง
+    </p>
+  </section>
+</main>
+
+<footer>
+  NEXUS STORE · เปลี่ยนเป็นชื่อร้านของคุณ<br>
+  ติดต่อร้าน: ใส่ช่องทางติดต่อของคุณที่นี่
+</footer>
+
+<script>
+const products = [
+  {id:1, name:"PYBG STEAM", price:45,
+   category:"game", icon:"🎮", desc:"ตัวอย่างโค้ดเกม"},
+  {id:2, name:"Gift Card B", price:199,
+   category:"gift", icon:"🎁", desc:"ตัวอย่างบัตรของขวัญ"},
+  {id:3, name:"Digital Pack C", price:149,
+   category:"other", icon:"💎", desc:"ตัวอย่างแพ็กเกจดิจิทัล"},
+  {id:4, name:"Game Code D", price:299,
+   category:"game", icon:"🕹️", desc:"ตัวอย่างสินค้าเกม"}
+];
+
+let cart = [];
+
+function renderProducts() {
+  const q = document.getElementById("search").value.toLowerCase();
+  const cat = document.getElementById("category").value;
+  const list = products.filter(p =>
+    p.name.toLowerCase().includes(q) &&
+    (cat === "all" || p.category === cat)
+  );
+
+  document.getElementById("productGrid").innerHTML = list.length
+    ? list.map(p => `
+      <article class="card">
+        <div class="art">${p.icon}</div>
+        <div class="tag">${p.desc}</div>
+        <h3>${p.name}</h3>
+        <div class="price">฿${p.price.toLocaleString("th-TH")}</div>
+        <div class="actions">
+          <button onclick="addToCart(${p.id})">เพิ่มลงตะกร้า</button>
+        </div>
+      </article>`).join("")
+    : "<p>ไม่พบสินค้าที่ค้นหา</p>";
+}
+
+function addToCart(id) {
+  const p = products.find(x => x.id === id);
+  const item = cart.find(x => x.id === id);
+  if (item) item.qty++;
+  else cart.push({...p, qty:1});
+  renderCart();
+}
+
+function removeItem(id) {
+  cart = cart.filter(x => x.id !== id);
+  renderCart();
+}
+
+function renderCart() {
+  document.getElementById("count").textContent =
+    cart.reduce((n,p) => n + p.qty, 0);
+
+  document.getElementById("cartItems").innerHTML = cart.length
+    ? cart.map(p => `
+      <div class="cart-row">
+        <span>${p.name} × ${p.qty}</span>
+        <span>฿${(p.price*p.qty).toLocaleString("th-TH")}
+          <button class="secondary" onclick="removeItem(${p.id})">
+            ลบ
+          </button>
+        </span>
+      </div>`).join("")
+    : "<p>ยังไม่มีสินค้าในตะกร้า</p>";
+
+  document.getElementById("total").textContent =
+    cart.reduce((n,p) => n+p.price*p.qty,0).toLocaleString("th-TH");
+}
+
+function checkout() {
+  if (!cart.length) {
+    alert("กรุณาเลือกสินค้าก่อน");
+    return;
+  }
+  document.getElementById("checkoutMessage").textContent =
+    "นี่คือหน้าทดลอง ยังไม่ได้เชื่อมระบบรับเงินหรือส่งโค้ด " +
+    "ห้ามใช้หน้านี้รับเงินจริง";
+  alert("ระบบสั่งซื้ออยู่ในโหมดทดลอง ยังไม่เรียกเก็บเงิน");
+}
+
+renderProducts();
+renderCart();
+</script>
+</body>
+</html>
